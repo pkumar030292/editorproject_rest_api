@@ -1,0 +1,167 @@
+import tkinter as tk
+from tkinter import filedialog, scrolledtext, messagebox
+import os
+import time
+import pandas as pd
+import requests
+import sqlite3
+
+# Setup
+UPLOAD_DIR = "uploaded_files"
+REPORT_DIR = "reports"
+DB_FILE = "ai_analysis.db"
+os.makedirs(UPLOAD_DIR, exist_ok=True)
+os.makedirs(REPORT_DIR, exist_ok=True)
+
+{{# DB Setup}}
+conn = sqlite3.connect(DB_FILE)
+c = conn.cursor()
+c.execute('''
+CREATE TABLE IF NOT EXISTS queries (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    query TEXT,
+    response TEXT,
+    file_path TEXT,
+    created_at TEXT,
+    report_path TEXT
+)
+''')
+conn.commit()
+
+# Global state
+last_uploaded_file = {"path": None, "time": None}
+
+def query_ollama(prompt):
+    try:
+        response = requests.post(
+            "http://localhost:11434/api/generate",
+            json={"model": "llama3", "prompt": prompt, "stream": False},
+            timeout=90
+        )
+        response.raise_for_status()
+        return response.json().get("response", "No response from model.")
+    except Exception as e:
+        return f"❌ Error: {str(e)}"
+
+def analyze_file(file_path):
+    try:
+        ext = os.path.splitext(file_path)[-1].lower()
+        if ext in ['.xls', '.xlsx']:
+            df = pd.read_excel(file_path)
+        elif ext in ['.csv', '.txt']:
+            df = pd.read_csv(file_path)
+        else:
+            return "Unsupported file format."
+        return df
+    except Exception as e:
+        return f"Error reading file: {str(e)}"
+
+def save_report(content, format="txt"):
+    filename = f"report_{int(time.time())}.{format}"
+    full_path = os.path.join(REPORT_DIR, filename)
+    if format == "txt":
+        with open(full_path, "w", encoding='utf-8') as f:
+            f.write(content)
+    elif format == "xlsx":
+        df = pd.DataFrame({"AI_Report": content.splitlines()})
+        df.to_excel(full_path, index=False)
+    elif format == "csv":
+        df = pd.DataFrame({"AI_Report": content.splitlines()})
+        df.to_csv(full_path, index=False)
+    return full_path
+
+def get_past_response(query):
+    c.execute("SELECT response, report_path, created_at FROM queries WHERE query = ? ORDER BY created_at DESC LIMIT 1", (query,))
+    return c.fetchone()
+
+def upload_file():
+    file_path = filedialog.askopenfilename(filetypes=[
+        ("Excel files", "*.xls *.xlsx"),
+        ("CSV files", "*.csv"),
+        ("Text files", "*.txt")
+    ])
+    if file_path:
+        file_name = os.path.basename(file_path)
+        saved_path = os.path.join(UPLOAD_DIR, file_name)
+        with open(file_path, 'rb') as fsrc, open(saved_path, 'wb') as fdst:
+            fdst.write(fsrc.read())
+        last_uploaded_file['path'] = saved_path
+        last_uploaded_file['time'] = time.ctime()
+        messagebox.showinfo("File Uploaded", f"Uploaded: {file_name}")
+
+def ask_question():
+    instruction = instruction_box.get("1.0", tk.END).strip()
+    if not instruction:
+        messagebox.showwarning("Missing Input", "Please enter instructions or questions.")
+        return
+
+    if last_uploaded_file['path'] is None:
+        messagebox.showwarning("No File", "Please upload a file first.")
+        return
+
+    df_or_msg = analyze_file(last_uploaded_file['path'])
+    if isinstance(df_or_msg, str):  # Error
+        output_box.insert(tk.END, df_or_msg)
+        return
+    df = df_or_msg
+
+    # Search past response
+    past = get_past_response(instruction)
+    if past:
+        output_box.insert(tk.END, f"Previous Analysis ({past[2]}):\n{past[0]}\n---\n")
+
+    content = df.to_string(index=False)[:3000]  # Limited RAG-like context
+    full_prompt = f"""You are an expert analyst AI. Based on the following file content, perform the instruction:
+
+File Data:
+{content}
+
+Instruction:
+{instruction}
+"""
+    response = query_ollama(full_prompt)
+
+    output_box.delete("1.0", tk.END)
+    output_box.insert(tk.END, response)
+
+    # Determine file type from instruction
+    fmt = "txt"
+    if "excel" in instruction.lower():
+        fmt = "xlsx"
+    elif "csv" in instruction.lower():
+        fmt = "csv"
+
+    report_path = save_report(response, fmt)
+
+    # Store in DB
+    c.execute("INSERT INTO queries (query, response, file_path, created_at, report_path) VALUES (?, ?, ?, ?, ?)",
+              (instruction, response, last_uploaded_file['path'], time.ctime(), report_path))
+    conn.commit()
+
+    messagebox.showinfo("Report Saved", f"Report generated and saved as: {report_path}")
+
+# GUI Setup
+root = tk.Tk()
+root.title("📊 Smart AI File Analyzer & Report Generator")
+root.geometry("850x600")
+
+upload_btn = tk.Button(root, text="📁 Upload File", command=upload_file)
+upload_btn.pack(pady=10)
+
+instruction_label = tk.Label(root, text="📝 Enter your instruction/question:")
+instruction_label.pack()
+instruction_box = scrolledtext.ScrolledText(root, height=5, wrap=tk.WORD)
+instruction_box.pack(padx=10, fill=tk.BOTH)
+
+analyze_btn = tk.Button(root, text="🔍 Analyze & Generate Report", command=ask_question)
+analyze_btn.pack(pady=10)
+
+output_label = tk.Label(root, text="📄 AI Response:")
+output_label.pack()
+output_box = scrolledtext.ScrolledText(root, height=15, wrap=tk.WORD)
+output_box.pack(padx=10, pady=10, fill=tk.BOTH)
+
+root.mainloop()
+
+# Cleanup
+conn.close()

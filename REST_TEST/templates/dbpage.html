@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>DB Management Page</title>
+<style>
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    input, select, button { margin: 5px 0; padding: 5px; width: 200px; }
+    .section { border: 1px solid #ccc; padding: 10px; margin-top: 20px; }
+    .hidden { display: none; }
+    label { display: block; margin-top: 10px; }
+</style>
+</head>
+<body>
+
+<h2>VM Connection</h2>
+<div class="section">
+    <label>VM IP:</label>
+    <input type="text" id="vm-ip" value="192.168.56.101">
+    <label>VM User:</label>
+    <input type="text" id="vm-user" value="cisco">
+    <label>VM Password:</label>
+    <input type="password" id="vm-password">
+    <button type="button" onclick="connectVM()">Connect VM</button>
+    <p id="vm-status"></p>
+</div>
+
+<h2>DB Connection</h2>
+<div class="section hidden" id="db-section">
+    <label>DB Host:</label>
+    <input type="text" id="db-host">
+    <label>DB Port:</label>
+    <input type="number" id="db-port" value="3306">
+    <label>DB User:</label>
+    <input type="text" id="db-user">
+    <label>DB Password:</label>
+    <input type="password" id="db-password">
+    <button type="button" onclick="connectDB()">Connect to DB</button>
+    <p id="db-status"></p>
+</div>
+
+<h2>Databases & Tables</h2>
+<div class="section hidden" id="db-details-section">
+    <label>Select Database:</label>
+    <select id="db-list" onchange="loadTables()"></select>
+    <button type="button" onclick="deleteDB()">Delete Database</button>
+
+    <label>Select Table:</label>
+    <select id="table-list" onchange="showTableDetails()"></select>
+    <button type="button" onclick="deleteTable()">Delete Table</button>
+
+    <h3>Table Details:</h3>
+    <pre id="table-details"></pre>
+</div>
+
+<h2>Create Database</h2>
+<div class="section hidden" id="create-db-section">
+    <label>New DB Name:</label>
+    <input type="text" id="new-db-name">
+    <button type="button" onclick="createDB()">Create DB</button>
+    <p id="create-db-status"></p>
+</div>
+
+<h2>Create Table</h2>
+<div class="section hidden" id="create-table-section">
+    <label>Table Name:</label>
+    <input type="text" id="new-table-name">
+    <label>Columns (name:type, comma-separated):</label>
+    <input type="text" id="table-columns" placeholder="id:int,name:varchar(255),salary:decimal(10,2)">
+    <button type="button" onclick="createTable()">Create Table</button>
+    <p id="create-table-status"></p>
+</div>
+
+<script>
+let vmConnected = false;
+let dbConnected = false;
+
+// --------- VM Connection ---------
+function connectVM() {
+    const payload = {
+        ip: document.getElementById("vm-ip").value,
+        user: document.getElementById("vm-user").value,
+        password: document.getElementById("vm-password").value
+    };
+    fetch("/connectVM", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) })
+    .then(res => res.json())
+    .then(data => {
+        document.getElementById("vm-status").innerText = data.message;
+        if(data.success){
+            vmConnected = true;
+            document.getElementById("db-section").classList.remove("hidden");
+        }
+    }).catch(err => console.error(err));
+}
+
+// --------- DB Connection ---------
+function connectDB() {
+    const payload = {
+        host: document.getElementById("db-host").value,
+        port: parseInt(document.getElementById("db-port").value),
+        user: document.getElementById("db-user").value,
+        password: document.getElementById("db-password").value
+    };
+    fetch("/connect-db", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) })
+    .then(res => res.json())
+    .then(data => {
+        document.getElementById("db-status").innerText = data.success ? "Connected successfully!" : "Connection failed!";
+        if(data.success){
+            dbConnected = true;
+            const dbList = document.getElementById("db-list");
+            dbList.innerHTML = "";
+            data.databases.forEach(db => {
+                const option = document.createElement("option");
+                option.value = db;
+                option.text = db;
+                dbList.add(option);
+            });
+            document.getElementById("db-details-section").classList.remove("hidden");
+            document.getElementById("create-db-section").classList.remove("hidden");
+            document.getElementById("create-table-section").classList.remove("hidden");
+            loadTables();
+        }
+    }).catch(err => console.error(err));
+}
+
+// --------- Load Tables ---------
+function loadTables() {
+    const dbName = document.getElementById("db-list").value;
+    if(!dbName) return;
+    fetch(`/tables?db_name=${dbName}`, { method: "GET" })
+    .then(res => res.json())
+    .then(data => {
+        const tableList = document.getElementById("table-list");
+        tableList.innerHTML = "";
+        data.tables.forEach(tbl => {
+            const option = document.createElement("option");
+            option.value = tbl;
+            option.text = tbl;
+            tableList.add(option);
+        });
+        if(data.tables.length > 0) showTableDetails();
+        else document.getElementById("table-details").innerText = "No tables in this database.";
+    });
+}
+
+// --------- Show Table Details ---------
+function showTableDetails() {
+    const dbName = document.getElementById("db-list").value;
+    const tableName = document.getElementById("table-list").value;
+    if(!tableName) return;
+    fetch(`/table-details?db_name=${dbName}&table_name=${tableName}`, { method: "GET" })
+    .then(res => res.json())
+    .then(data => {
+        document.getElementById("table-details").innerText = JSON.stringify(data.details, null, 2);
+    });
+}
+
+// --------- Create Database ---------
+function createDB() {
+    const dbName = document.getElementById("new-db-name").value;
+    if(!dbName) return;
+    fetch("/create-db", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ db_name: dbName }) })
+    .then(res => res.json())
+    .then(data => {
+        document.getElementById("create-db-status").innerText = data.message;
+        if(data.success) connectDB(); // Refresh DB list
+    });
+}
+
+// --------- Create Table ---------
+function createTable() {
+    const dbName = document.getElementById("db-list").value;
+    const tableName = document.getElementById("new-table-name").value;
+    const columns = document.getElementById("table-columns").value;
+    if(!tableName || !columns){ alert("Table name and columns are required!"); return; }
+    fetch("/create-table", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ db_name: dbName, table_name: tableName, columns: columns }) })
+    .then(res => res.json())
+    .then(data => {
+        document.getElementById("create-table-status").innerText = data.message;
+        if(data.success) loadTables();
+    });
+}
+
+// --------- Delete Database ---------
+function deleteDB() {
+    const dbName = document.getElementById("db-list").value;
+    if(!dbName || !confirm(`Are you sure you want to delete database "${dbName}"?`)) return;
+    fetch("/delete-db", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ db_name: dbName }) })
+    .then(res => res.json())
+    .then(data => {
+        alert(data.message);
+        if(data.success) connectDB(); // Refresh DB list
+    });
+}
+
+// --------- Delete Table ---------
+function deleteTable() {
+    const dbName = document.getElementById("db-list").value;
+    const tableName = document.getElementById("table-list").value;
+    if(!tableName || !confirm(`Are you sure you want to delete table "${tableName}"?`)) return;
+    fetch("/delete-table", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ db_name: dbName, table_name: tableName }) })
+    .then(res => res.json())
+    .then(data => {
+        alert(data.message);
+        if(data.success) loadTables(); // Refresh table list
+    });
+}
+</script>
+</body>
+</html>

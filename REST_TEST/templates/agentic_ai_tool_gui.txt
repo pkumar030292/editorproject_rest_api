@@ -1,0 +1,134 @@
+# agentic_ai_tool_gui.py
+
+import os
+import json
+from datetime import datetime
+from tkinter import Tk, Label, Entry, Button, Text, Scrollbar, filedialog, messagebox
+from llama_cpp import Llama
+import sqlite3
+
+# ----------------------------------------
+# Setup LLaMA model (local GGUF model)
+# ----------------------------------------
+MODEL_PATH = "models/capybarahermes-2.5-mistral-7b.Q2_K.gguf"
+llm = Llama(model_path=MODEL_PATH, n_ctx=2048, n_threads=4)
+
+# ----------------------------------------
+# Setup SQLite memory DB
+# ----------------------------------------
+conn = sqlite3.connect("agent_memory.db")
+cursor = conn.cursor()
+cursor.execute("""
+CREATE TABLE IF NOT EXISTS memory (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    timestamp TEXT,
+    goal TEXT,
+    step TEXT,
+    output TEXT
+)
+""")
+conn.commit()
+
+# ----------------------------------------
+# Agent logic: planning + memory
+# ----------------------------------------
+def run_agent(goal):
+    steps = [
+        "Understand and rephrase the goal",
+        "Break down the goal into actionable tasks",
+        "Identify tools or libraries needed",
+        "Suggest a file/folder structure",
+        "Generate a simple code outline",
+        "Summarize the full plan"
+    ]
+    memory = []
+
+    for i, step in enumerate(steps):
+        prompt = f"""
+You are an intelligent AI agent.
+Your goal is: {goal}
+Previous memory: {json.dumps(memory, indent=2)}
+Current step ({i+1}/{len(steps)}): {step}
+Please answer clearly.
+"""
+        result = llm(prompt, max_tokens=512)
+        output = result['choices'][0]['text'].strip()
+
+        memory.append({"step": step, "output": output})
+
+        cursor.execute("INSERT INTO memory (timestamp, goal, step, output) VALUES (?, ?, ?, ?)",
+                       (datetime.now().isoformat(), goal, step, output))
+        conn.commit()
+
+    return memory
+
+# ----------------------------------------
+# Tool: Create folders & read files
+# ----------------------------------------
+def create_project_structure(base_path, structure):
+    for path in structure.split("\n"):
+        path = path.strip()
+        if path:
+            full_path = os.path.join(base_path, path)
+            if not os.path.exists(full_path):
+                os.makedirs(full_path, exist_ok=True)
+
+# ----------------------------------------
+# GUI using Tkinter
+# ----------------------------------------
+def browse_folder():
+    path = filedialog.askdirectory()
+    folder_entry.delete(0, 'end')
+    folder_entry.insert(0, path)
+
+def execute():
+    goal = goal_entry.get()
+    base_path = folder_entry.get()
+
+    if not goal:
+        messagebox.showerror("Error", "Please enter a goal")
+        return
+
+    results = run_agent(goal)
+
+    # extract folder structure from output if possible
+    folder_plan = ""
+    for item in results:
+        if "structure" in item["step"].lower():
+            folder_plan = item["output"]
+            break
+
+    if folder_plan:
+        create_project_structure(base_path, folder_plan)
+
+    output_text.delete("1.0", "end")
+    for mem in results:
+        output_text.insert("end", f"\n🔹 {mem['step']}\n{mem['output']}\n")
+
+# GUI Layout
+root = Tk()
+root.title("Agentic AI (Offline)")
+root.geometry("700x600")
+
+Label(root, text="Enter your Goal:").pack()
+goal_entry = Entry(root, width=100)
+goal_entry.pack()
+
+Label(root, text="Choose Base Folder:").pack()
+folder_entry = Entry(root, width=80)
+folder_entry.pack(side="left", padx=10)
+Button(root, text="Browse", command=browse_folder).pack(side="left")
+
+Button(root, text="Run Agent", command=execute).pack(pady=10)
+
+scrollbar = Scrollbar(root)
+scrollbar.pack(side="right", fill="y")
+
+output_text = Text(root, wrap="word", yscrollcommand=scrollbar.set, height=25)
+output_text.pack(fill="both", expand=True)
+scrollbar.config(command=output_text.yview)
+
+root.mainloop()
+
+# Cleanup
+conn.close()

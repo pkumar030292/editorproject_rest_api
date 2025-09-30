@@ -1,0 +1,116 @@
+import tkinter as tk
+from tkinter import filedialog, scrolledtext, messagebox
+import os
+import time
+import pandas as pd
+import requests
+
+# Create upload directory
+UPLOAD_DIR = "uploaded_files"
+os.makedirs(UPLOAD_DIR, exist_ok=True)
+
+# Global state
+last_uploaded_file = {"path": None, "time": None}
+
+def query_ollama(prompt):
+    try:
+        response = requests.post(
+            "http://localhost:11434/api/generate",
+            json={
+                "model": "llama3",
+                "prompt": prompt,
+                "stream": False
+            },
+            timeout=60
+        )
+        response.raise_for_status()
+        return response.json().get("response", "No response from model.")
+    except Exception as e:
+        return f"❌ Error: {str(e)}"
+
+def analyze_file(file_path):
+    try:
+        ext = os.path.splitext(file_path)[-1].lower()
+        if ext in ['.xls', '.xlsx']:
+            df = pd.read_excel(file_path)
+        elif ext in ['.csv', '.txt']:
+            df = pd.read_csv(file_path)
+        else:
+            return "Unsupported file format."
+
+        content = df.to_string(index=False)
+        return content[:3000]  # limit context for prompt size
+    except Exception as e:
+        return f"Error reading file: {str(e)}"
+
+def upload_file():
+    file_path = filedialog.askopenfilename(filetypes=[
+        ("Excel files", "*.xls *.xlsx"),
+        ("CSV files", "*.csv"),
+        ("Text files", "*.txt")
+    ])
+    if file_path:
+        file_name = os.path.basename(file_path)
+        saved_path = os.path.join(UPLOAD_DIR, file_name)
+        with open(file_path, 'rb') as fsrc, open(saved_path, 'wb') as fdst:
+            fdst.write(fsrc.read())
+
+        last_uploaded_file['path'] = saved_path
+        last_uploaded_file['time'] = time.ctime()
+        messagebox.showinfo("File Uploaded", f"Uploaded: {file_name}")
+
+def ask_question():
+    instruction = instruction_box.get("1.0", tk.END).strip()
+
+    if not instruction:
+        messagebox.showwarning("Missing Input", "Please enter instructions or questions.")
+        return
+
+    file_data = ""
+    if last_uploaded_file['path']:
+        file_data = analyze_file(last_uploaded_file['path'])
+    else:
+        file_data = "No file has been uploaded yet."
+
+    # Check if instruction is about upload time
+    if "when last file" in instruction.lower():
+        answer = f"Last file uploaded at: {last_uploaded_file['time']}" if last_uploaded_file['time'] else "No file uploaded yet."
+    else:
+        full_prompt = f"""You are an AI assistant. Analyze the below file data and answer the question or perform the instruction.
+
+File Content (may be partial): 
+{file_data}
+
+Instruction: {instruction}
+"""
+        answer = query_ollama(full_prompt)
+
+    output_box.delete("1.0", tk.END)
+    output_box.insert(tk.END, answer)
+
+# GUI Setup
+root = tk.Tk()
+root.title("🧠 File Analyzer with AI")
+root.geometry("800x600")
+
+# Upload Button
+upload_btn = tk.Button(root, text="📁 Upload File", command=upload_file)
+upload_btn.pack(pady=10)
+
+# Instruction Label and Box
+instruction_label = tk.Label(root, text="📝 Enter your instruction/question:")
+instruction_label.pack()
+instruction_box = scrolledtext.ScrolledText(root, height=5, wrap=tk.WORD)
+instruction_box.pack(padx=10, fill=tk.BOTH)
+
+# Analyze Button
+analyze_btn = tk.Button(root, text="🔍 Analyze", command=ask_question)
+analyze_btn.pack(pady=10)
+
+# Output Box
+output_label = tk.Label(root, text="📄 AI Response:")
+output_label.pack()
+output_box = scrolledtext.ScrolledText(root, height=15, wrap=tk.WORD)
+output_box.pack(padx=10, pady=10, fill=tk.BOTH)
+
+root.mainloop()
