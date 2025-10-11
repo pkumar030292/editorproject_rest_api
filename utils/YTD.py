@@ -1,23 +1,23 @@
 import os
 import yt_dlp
-import ffmpeg
+# import ffmpeg
 from urllib.parse import urlparse, parse_qs
 
 
-'''
-FFMPEG_EXE_PATH = os.path.abspath(
-    os.path.join(
-        os.path.dirname(__file__),
-        "ffmpeg-8.0-full_build",
-        "ffmpeg-8.0-full_build",
-        "bin",
-        "ffmpeg.exe"
-    )
-)
-
-if not os.path.exists(FFMPEG_EXE_PATH):
-    raise FileNotFoundError(f"FFmpeg executable not found at: {FFMPEG_EXE_PATH}")
-'''
+# '''
+# FFMPEG_EXE_PATH = os.path.abspath(
+#     os.path.join(
+#         os.path.dirname(__file__),
+#         "ffmpeg-8.0-full_build",
+#         "ffmpeg-8.0-full_build",
+#         "bin",
+#         "ffmpeg.exe"
+#     )
+# )
+# 
+# if not os.path.exists(FFMPEG_EXE_PATH):
+#     raise FileNotFoundError(f"FFmpeg executable not found at: {FFMPEG_EXE_PATH}")
+# '''
 DOWNLOAD_DIR = os.path.join(os.path.dirname(__file__), "YTD", "downloads")
 os.makedirs(DOWNLOAD_DIR, exist_ok=True)
 
@@ -52,14 +52,14 @@ def get_available_formats(youtube_url):
             return formats
     except Exception as e:
         raise RuntimeError(f"yt-dlp error: {str(e)}")
-'''
-def convert_to_mp3(input_path):
-    base, _ = os.path.splitext(input_path)
-    output_path = base + '.mp3'
-    ffmpeg.input(input_path).output(output_path, format='mp3', acodec='libmp3lame').run(
-        overwrite_output=True,
-        cmd=FFMPEG_EXE_PATH
-    )
-    return output_path
+# '''
+# def convert_to_mp3(input_path):
+#     base, _ = os.path.splitext(input_path)
+#     output_path = base + '.mp3'
+#     ffmpeg.input(input_path).output(output_path, format='mp3', acodec='libmp3lame').run(
+#         overwrite_output=True,
+#         cmd=FFMPEG_EXE_PATH
+#     )
+#     return output_path
 
-'''
+# '''
