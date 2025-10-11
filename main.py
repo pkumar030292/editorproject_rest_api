@@ -9,7 +9,7 @@ import time
 import yt_dlp
 from fastapi import BackgroundTasks, Body
 from io import BytesIO
-from utils.YTD import convert_to_mp3, DOWNLOAD_DIR, get_available_formats, sanitize_url, FFMPEG_EXE_PATH
+from utils.YTD import DOWNLOAD_DIR, get_available_formats, sanitize_url
 from utils import pdf2wordRouterApi
 from bs4 import BeautifulSoup
 from fastapi import FastAPI, HTTPException, Query, Request, Form
