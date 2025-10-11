@@ -136,6 +136,16 @@
             <button type="submit">Upload</button>
         </form>
         <p id="uploadStatus"></p>
+        <h4>
+    For Text File use
+    <span style="color:red; font-weight:bold;">{% raw %}{{{% endraw %}</span>
+    <span style="color:blue; font-weight:bold;">Input Field Name</span>
+    <span style="color:red; font-weight:bold;">{% raw %}}}{% endraw %}</span>
+    to make Template and for Word file use
+    <span style="color:red; font-weight:bold;">{% raw %}{{{{% endraw %}</span>
+    <span style="color:blue; font-weight:bold;">Input Field Name</span>
+    <span style="color:red; font-weight:bold;">{% raw %}}}}{% endraw %}</span>.
+</h4>
     </section>
 
     <!-- Template Delete Section -->
@@ -156,6 +166,9 @@
             <button type="button" onclick="deleteTemplate()">Delete Template</button>
             <p id="del-status"></p>
         </div>
+        <h4>
+           <span style="color:red; font-weight:bold;">{% raw %}Contact Administrator to Delete Template{% endraw %}</span>
+        <h4>
     </section>
 
     <section class="tab-content" id="pdf2wordSection">
