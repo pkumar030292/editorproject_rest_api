@@ -3,6 +3,8 @@ import yt_dlp
 import ffmpeg
 from urllib.parse import urlparse, parse_qs
 
+
+'''
 FFMPEG_EXE_PATH = os.path.abspath(
     os.path.join(
         os.path.dirname(__file__),
@@ -15,7 +17,7 @@ FFMPEG_EXE_PATH = os.path.abspath(
 
 if not os.path.exists(FFMPEG_EXE_PATH):
     raise FileNotFoundError(f"FFmpeg executable not found at: {FFMPEG_EXE_PATH}")
-
+'''
 DOWNLOAD_DIR = os.path.join(os.path.dirname(__file__), "YTD", "downloads")
 os.makedirs(DOWNLOAD_DIR, exist_ok=True)
 
@@ -30,7 +32,7 @@ def get_available_formats(youtube_url):
         ydl_opts = {
             'quiet': True,
             'skip_download': True,
-            'ffmpeg_location': FFMPEG_EXE_PATH
+            # 'ffmpeg_location': FFMPEG_EXE_PATH
         }
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             info = ydl.extract_info(youtube_url, download=False)
@@ -50,7 +52,7 @@ def get_available_formats(youtube_url):
             return formats
     except Exception as e:
         raise RuntimeError(f"yt-dlp error: {str(e)}")
-
+'''
 def convert_to_mp3(input_path):
     base, _ = os.path.splitext(input_path)
     output_path = base + '.mp3'
@@ -59,3 +61,5 @@ def convert_to_mp3(input_path):
         cmd=FFMPEG_EXE_PATH
     )
     return output_path
+
+'''
