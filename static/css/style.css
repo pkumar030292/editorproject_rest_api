@@ -1,0 +1,179 @@
+/* ===================== General Page ===================== */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f8f9fa;
+    color: #333;
+}
+
+header {
+    background-color: #007BFF;
+    color: #fff;
+    padding: 20px 0;
+    text-align: center;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+h1 {
+    margin: 0;
+    font-size: 1.8rem;
+    font-weight: 600;
+}
+
+.container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    padding: 20px;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+/* ===================== Card Styling ===================== */
+.card {
+    background-color: #fff;
+    border-radius: 12px;
+    padding: 20px;
+    width: 260px;
+    max-width: 95%;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+}
+
+.card h2 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #007BFF;
+}
+
+/* ===================== Inputs & Selects ===================== */
+label {
+    font-weight: 500;
+    margin-bottom: 5px;
+    display: block;
+}
+
+select, textarea, input {
+    padding: 6px 8px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 0.9rem;
+    box-sizing: border-box;
+    width: 100%;
+    font-family: inherit;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+select:focus, textarea:focus, input:focus {
+    border-color: #007BFF;
+    box-shadow: 0 0 6px rgba(0,123,255,0.25);
+    outline: none;
+}
+
+/* Small select dropdowns */
+.dsselect {
+    width: 120px;
+}
+.gsselect {
+    width: 140px;
+}
+
+/* ===================== Buttons ===================== */
+button {
+    padding: 6px 12px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.btn-gradient {
+    background: linear-gradient(135deg, #007BFF, #0056b3);
+    color: #fff;
+}
+.btn-gradient:hover {
+    background: linear-gradient(135deg, #0056b3, #003f7f);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+}
+
+.btn-outline {
+    background: transparent;
+    border: 2px solid #007BFF;
+    color: #007BFF;
+}
+.btn-outline:hover {
+    background: #007BFF;
+    color: #fff;
+}
+
+.buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* ===================== Output / Preview ===================== */
+pre {
+    background-color: #f1f3f5;
+    padding: 12px;
+    overflow-x: auto;
+    border-radius: 6px;
+    min-height: 40px;
+    font-size: 0.85rem;
+}
+
+/* ===================== Upload Status ===================== */
+#uploadStatus {
+    margin-top: 15px;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+/* ===================== Responsive ===================== */
+@media (max-width: 900px) {
+    .card { width: 45%; }
+}
+@media (max-width: 600px) {
+    .card { width: 90%; }
+}
+canvas {
+  border: 2px solid #444;
+  border-radius: 10px;
+  margin-top: 10px;
+  background-color: #f8f8f8;
+}
+
+#controls {
+  margin-top: 15px;
+}
+
+#chatbox {
+  width: 300px;
+  margin: 20px auto;
+  text-align: left;
+  border: 1px solid #ccc;
+  padding: 10px;
+  background: #fff;
+}
+
+#messages {
+  height: 150px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  margin-bottom: 10px;
+  padding: 5px;
+}

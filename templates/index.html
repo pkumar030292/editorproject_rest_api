@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dynamic HLD Generator</title>
+    <link rel="stylesheet" href="{{ url_for('static', path='css/style.css') }}">
+   <style>
+    /* Modern Compact Tabs Styling */
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap');
+
+    body {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 14px; /* smaller font */
+        color: #333;
+    }
+
+    .tabs {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 15px;
+    }
+
+    .tab-btn {
+        padding: 6px 12px;
+        cursor: pointer;
+        border: 1px solid #ccc;
+        border-bottom: none;
+        background: #f0f0f0;
+        font-weight: 600;
+        border-radius: 8px 8px 0 0;
+        transition: all 0.3s ease;
+        font-size: 13px;
+        letter-spacing: 0.5px;
+        color: #444;
+    }
+
+    .tab-btn:hover {
+        background: #d3f8d3;
+        color: #222;
+        transform: translateY(-2px);
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    .tab-btn.active {
+        background: #079C23;
+        color: #fff;
+        border-bottom: 4px solid #F40B1F;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.15);
+    }
+
+    .tab-content {
+        display: none;
+        border: 1px solid #ccc;
+        padding: 12px 15px;
+        border-radius: 0 8px 8px 8px;
+        background: #fafafa;
+        box-shadow: inset 0 0 5px rgba(0,0,0,0.03);
+        font-size: 13px;
+        line-height: 1.4;
+    }
+
+    .tab-content.active {
+        display: block;
+    }
+
+    /* Optional: subtle scrollbar for content overflow */
+    .tab-content::-webkit-scrollbar {
+        width: 6px;
+    }
+    .tab-content::-webkit-scrollbar-thumb {
+        background: #ccc;
+        border-radius: 3px;
+    }
+</style>
+
+</head>
+<body>
+<header>
+    <h1>Dynamic HLD Generator</h1>
+    <!-- Manage DB Button -->
+    <button onclick="window.location.href='/dbpage'">Manage DB</button>
+    <a href="/whiteboard" target="_blank">Open Collaborative Whiteboard</a>
+
+</header>
+<main class="container">
+    <!-- Tabs -->
+    <div class="tabs">
+        <div class="tab-btn active" data-tab="generateSection">Generate Template</div>
+        <div class="tab-btn" data-tab="downloadSection">Download Template</div>
+        <div class="tab-btn" data-tab="uploadSection">Upload New Template</div>
+        <div class="tab-btn" data-tab="deleteSection">Delete Template</div>
+        <div class="tab-btn" data-tab="pdf2wordSection">Convert Documents</div>
+        <div class="tab-btn" data-tab="scrapSection">Web Scraper</div>
+        <div class="tab-btn" data-tab="youtubeSection">YouTube Downloader</div>
+        <div class="tab-btn" data-tab="whiteboardSection">Whiteboard</div>
+
+    </div>
+
+    <!-- Document Generation Section -->
+    <section class="tab-content" id="generateSection">
+        <h2>Generate Document</h2>
+        <label for="template">Select Template:</label>
+        <select id="template" class="gsselect" onchange="loadSchema()">
+            <option value="">Select Template</option>
+            {% for t in templates %}
+            <option value="{{ t }}">{{ t }}</option>
+            {% endfor %}
+        </select>
+        <div id="fields"></div>
+        <div class="buttons">
+            <button onclick="generateDoc()">Generate Document</button>
+            <button onclick="previewDoc()">Preview Document</button>
+        </div>
+        <pre id="previewOutput"></pre>
+    </section>
+
+    <!-- File Download Section -->
+    <section class="tab-content" id="downloadSection">
+        <h2>Download Files</h2>
+        <label for="files">Select File:</label>
+        <select id="files" class="dsselect" onchange="if(this.value) window.location.href='/download_doc/' + encodeURIComponent(this.value)">
+
+
+            <option value="">Select File</option>
+            {% for f in files %}
+            <option value="{{ f }}">{{ f }}</option>
+            {% endfor %}
+        </select>
+    </section>
+
+    <!-- Template Upload Section -->
+    <section class="tab-content" id="uploadSection">
+        <h2>Upload New Template</h2>
+        <form id="uploadForm" enctype="multipart/form-data">
+            <input type="file" id="templateFile" name="file" required>
+            <button type="submit">Upload</button>
+        </form>
+        <p id="uploadStatus"></p>
+    </section>
+
+    <!-- Template Delete Section -->
+    <section class="tab-content" id="deleteSection">
+        <h2>Delete Template</h2>
+        <div class="section">
+            <label>Template Name:</label>
+            <select id="template-list">
+                <option value="">Select Template</option>
+                {% for t in templates %}
+                <option value="{{ t }}">{{ t }}</option>
+                {% endfor %}
+            </select>
+            <label>Username:</label>
+            <input type="text" id="del-username">
+            <label>Password:</label>
+            <input type="password" id="del-password">
+            <button type="button" onclick="deleteTemplate()">Delete Template</button>
+            <p id="del-status"></p>
+        </div>
+    </section>
+
+    <section class="tab-content" id="pdf2wordSection">
+      <h2>Convert PDF / Image</h2>
+      <input type="file" id="inputFile" accept=".pdf,.png,.jpg,.jpeg,.bmp,.tiff">
+      <br/>
+      <label>
+        Conversion Type:
+        <select id="conversionType">
+          <option value="pdf-word">PDF → Word (native)</option>
+          <option value="ocr-pdf-word">PDF → Word (OCR fallback)</option>
+          <option value="image-word">Image → Word</option>
+          <option value="image-text">Image → Text (.txt)</option>
+        </select>
+      </label>
+      <br/>
+      <button type="button" onclick="uploadAndConvertFile()">Convert</button>
+      <p id="conversionStatus"></p>
+    </section>
+<!--AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA________SCAPPER-->
+<section class="tab-content active" id="scrapSection">
+        <h2>Web Scraper</h2>
+
+        <div id="flipkartSection">
+            <label for="flipkartUrl">Enter Flipkart Search Page URL:</label><br>
+            <input type="text" id="flipkartUrl" placeholder="https://www.flipkart.com/search?q=mobile" style="width:70%;"><br>
+            <button onclick="startFlipkartScrap()">Start Scraping</button>
+            <button id="downloadFlipkart" style="display:none;" onclick="downloadFlipkartData()">Download CSV</button>
+
+            <div id="flipkartResults"></div>
+        </div>
+    </section>
+
+<!-- include JS -->
+<!--<script src="/static/js/scrap.js"></script>-->
+
+
+
+<!--@######################YTD-->
+
+    <style>
+        body { font-family: Arial, sans-serif; font-size: 14px; color: #333; }
+        .tabs { display: flex; gap: 8px; margin-bottom: 15px; }
+        .tab-btn { padding: 6px 12px; cursor: pointer; border: 1px solid #ccc; border-bottom: none; background: #f0f0f0; border-radius: 8px 8px 0 0; }
+        .tab-btn.active { background: #079C23; color: #fff; border-bottom: 4px solid #F40B1F; }
+        .tab-content { display: none; border: 1px solid #ccc; padding: 12px; border-radius: 0 8px 8px 8px; background: #fafafa; }
+        .tab-content.active { display: block; }
+        select, input, button { margin: 5px 0; padding: 5px; width: 400px; }
+        #youtube-downloadBtn { display: none; }
+    </style>
+ <!-- YouTube Downloader Section -->
+<!--YTD Section-->
+<section class="tab-content" id="youtubeSection">
+    <h2>YouTube Downloader</h2>
+    <h5>Note: If no sound in any video and download in another format</h5>
+    <input type="text" id="youtube-url" placeholder="Enter YouTube URL" style="width:400px">
+    <button onclick="prepareYoutubeDownload()">Fetch Formats</button>
+
+    <select id="format-select" style="width:400px; margin-top:10px;">
+        <option value="">Select format</option>
+    </select>
+    <button onclick="startYoutubeDownload()">Submit</button>
+
+    <div class="progress" style="margin-top:15px;">
+        <p>Download Progress: <span id="youtube-download">0%</span></p>
+        <p>Conversion Progress: <span id="youtube-convert">0%</span></p>
+
+        <label for="youtube-file-select">Select File:</label>
+        <select id="youtube-file-select" style="width:70%; margin-bottom:10px;"></select>
+        <button id="youtube-downloadBtn" style="display:none;" onclick="downloadYoutubeFile()">Download Selected File</button>
+    </div>
+</section>
+
+     <script>
+        // Tab Switching
+        document.querySelectorAll(".tab-btn").forEach(btn => {
+            btn.addEventListener("click", () => {
+                document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+                document.querySelectorAll(".tab-content").forEach(c => c.classList.remove("active"));
+                btn.classList.add("active");
+                document.getElementById(btn.dataset.tab).classList.add("active");
+            });
+        });
+    </script>
+<script src="{{ url_for('static', path='js/youtube.js') }}"></script>
+
+<!--#######################################whiteboard-->
+<section class="tab-content" id="whiteboardSection">
+    <h2>Professional Whiteboard</h2>
+    <div id="whiteboard-toolbar">
+    <label>Color: <input type="color" id="wbColor" value="#000000"></label>
+    <label>Width: <input type="number" id="wbWidth" value="3" min="1" max="20"></label>
+    <button id="wbUndo">Undo</button>
+    <button id="wbRedo">Redo</button>
+    <button id="wbEraser">Eraser</button>
+    <button id="wbClear">Clear All</button>
+    <button id="wbSnapshot">Take Snapshot</button>
+    <button id="wbRecord">Start/Stop Recording</button>
+    <button id="wbFullscreen">Full Screen</button>
+    <select id="wbSymbols">
+        <option value="">Add Symbol</option>
+        <option value="circle">Circle</option>
+        <option value="square">Square</option>
+        <option value="arrow">Arrow</option>
+    </select>
+</div>
+
+    <canvas id="whiteboardCanvas"></canvas>
+</section>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+
+<!--########################################-->
+</main>
+
+<script>
+    // Tab Switching
+    document.querySelectorAll(".tab-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+            // remove active class from all
+            document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+            document.querySelectorAll(".tab-content").forEach(c => c.classList.remove("active"));
+
+            // add to selected
+            btn.classList.add("active");
+            document.getElementById(btn.dataset.tab).classList.add("active");
+        });
+    });
+</script>
+
+<!-- Scripts -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- optional if $ needed -->
+<script src="{{ url_for('static', path='js/scrap.js') }}"></script>
+<script>
+    // Tab Switching
+    document.querySelectorAll(".tab-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+            document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+            document.querySelectorAll(".tab-content").forEach(c => c.classList.remove("active"));
+            btn.classList.add("active");
+            document.getElementById(btn.dataset.tab).classList.add("active");
+        });
+    });
+</script>
+
+
+<script src="{{ url_for('static', path='js/main.js') }}"></script>
+<script src="{{ url_for('static', path='js/generate.js') }}"></script>
+<script src="{{ url_for('static', path='js/upload.js') }}"></script>
+<script src="{{ url_for('static', path='js/deleteTemplate.js') }}"></script>
+<script src="{{ url_for('static', path='js/pdf2word.js') }}"></script>
+<script src="{{ url_for('static', path='js/scrap.js') }}"></script>
+<script src="{{ url_for('static', path='js/whiteboard.js') }}"></script>
+<!--<script src="{{ url_for('static', path='js/youtube.js') }}"></script>-->
+
+   <h2>Scraping Results</h2>
+    <a href="/">Back to Home</a>
+    <hr>
+
+    {% if table %}
+        <table border="1" cellpadding="5" cellspacing="0">
+            {% for row in table %}
+                <tr>
+                    {% for col in row %}
+                        <td>{{ col }}</td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <p>No table found on the page.</p>
+    {% endif %}
+
+
+</body>
+</html>

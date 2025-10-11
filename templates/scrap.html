@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Scrap Page</title>
+</head>
+<body>
+    <h1>Scrap Results</h1>
+    <div id="results">
+        <!-- Table will be loaded dynamically -->
+    </div>
+
+    <script>
+        // Fetch scrapped data from backend
+        fetch("/scrap-data")
+            .then(res => res.json())
+            .then(data => {
+                let table = "<table border='1'><tr>";
+                Object.keys(data[0]).forEach(k => table += `<th>${k}</th>`);
+                table += "</tr>";
+                data.forEach(row => {
+                    table += "<tr>";
+                    Object.values(row).forEach(v => table += `<td>${v}</td>`);
+                    table += "</tr>";
+                });
+                table += "</table>";
+                document.getElementById("results").innerHTML = table;
+            })
+            .catch(err => console.error(err));
+    </script>
+</body>
+</html>

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Scraping Results</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        table { border-collapse: collapse; width: 100%; margin-top: 20px; }
+        th, td { border: 1px solid #ccc; padding: 8px; }
+        th { background: #079C23; color: white; }
+        img { max-width: 80px; }
+    </style>
+</head>
+<body>
+    <h2>Scraping Results</h2>
+    <a href="/">Back to Home</a>
+    <hr>
+
+    {% if table %}
+        <table>
+            <tr>
+                {% for head in headers %}
+                    <th>{{ head }}</th>
+                {% endfor %}
+            </tr>
+            {% for row in table %}
+                <tr>
+                    {% for col in row %}
+                        <td>{{ col|safe }}</td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <p>No data found.</p>
+    {% endif %}
+</body>
+</html>
