@@ -274,7 +274,7 @@ def index(request: Request):
 @app.get("/youtube/formats")
 def get_formats(url: str = Query(...)):
     try:
-        print("kkkjkajskajkdakdkjakd")
+        print("Scrapping Links for Format")
         clean_url = sanitize_url(url)
         formats = get_available_formats(clean_url)
         if not formats:
@@ -312,6 +312,11 @@ async def start_youtube(request: Request, background_tasks: BackgroundTasks):
                 'progress_hooks': [hook],
                 'ffmpeg_location': FFMPEG_EXE_PATH,
                 'merge_output_format': 'mp4',   # ensure merge
+                  # 🧠 Throttling to prevent 429
+                'sleep_interval': 2,          # Wait 2 seconds between requests
+                'max_sleep_interval': 5,      # Random sleep up to 5s
+                'ratelimit': 500000,          # Max 500KB/s download speed
+                'throttled_rate': 300000,     # Gradually reduce speed if needed
             }
 
             with yt_dlp.YoutubeDL(ydl_opts) as ydl:
