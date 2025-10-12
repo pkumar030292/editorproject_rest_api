@@ -197,7 +197,8 @@
             <input type="text" id="flipkartUrl" placeholder="https://www.flipkart.com/search?q=mobile" style="width:70%;"><br>
             <button onclick="startFlipkartScrap()">Start Scraping</button>
             <button id="downloadFlipkart" style="display:none;" onclick="downloadFlipkartData()">Download CSV</button>
-            <button id="downloadBtn">Download Table</button>
+            <button id="downloadBtn" style="display:none;">Download Table</button>
+
 
 
             <div id="flipkartResults"></div>
@@ -341,24 +342,32 @@
     {% else %}
         <p>No table found on the page.</p>
     {% endif %}
+
+
+
+
+
+
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script>
 document.getElementById("downloadBtn").addEventListener("click", function () {
-    // Look for table inside the Flipkart results section
+    // Find the table inside Flipkart Results (where your scraper displays data)
     var table = document.querySelector("#flipkartResults table");
 
     if (!table) {
-        alert("No table found in results!");
+        alert("No scraped table found yet!");
         return;
     }
 
-    // Convert the HTML table to a workbook
+    // Convert HTML table → Excel workbook
     var workbook = XLSX.utils.table_to_book(table, { sheet: "Scraped Data" });
 
-    // Download the Excel file
+    // Download file directly from browser
     XLSX.writeFile(workbook, "flipkart_data.xlsx");
 });
 </script>
+
 
 
 </body>
