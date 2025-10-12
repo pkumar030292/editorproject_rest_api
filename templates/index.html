@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Dynamic HLD Generator</title>
+    <title>The Portal</title>
     <link rel="stylesheet" href="{{ url_for('static', path='css/style.css') }}">
    <style>
     /* Modern Compact Tabs Styling */
@@ -76,7 +76,7 @@
 </head>
 <body>
 <header>
-    <h1>Dynamic HLD Generator</h1>
+    <h1>The Portal</h1>
     <!-- Manage DB Button -->
     <button onclick="window.location.href='/dbpage'">Manage DB</button>
     <a href="/whiteboard" target="_blank">Open Collaborative Whiteboard</a>
@@ -116,7 +116,7 @@
 
     <!-- File Download Section -->
     <section class="tab-content" id="downloadSection">
-        <h2>Download Files</h2>
+        <h2>Download Section</h2>
         <label for="files">Select File:</label>
         <select id="files" class="dsselect" onchange="if(this.value) window.location.href='/download_doc/' + encodeURIComponent(this.value)">
 
