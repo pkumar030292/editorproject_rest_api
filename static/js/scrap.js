@@ -30,23 +30,31 @@ window.startFlipkartScrap = async function() {
         }
 
         // Build table with all product details
-        let table = `<table border="1" cellpadding="8" style="border-collapse: collapse; width:100%">
-            <thead style="background:#f2f2f2">
-                <tr>
-                    <th>Title</th><th>Price</th><th>Old Price</th><th>Discount</th><th>Rating</th><th>Features</th><th>Link</th>
-                </tr>
-            </thead><tbody>`;
+       let table = `<table border="1" cellpadding="8" style="border-collapse: collapse; width:100%">
+    <thead style="background:#f2f2f2">
+        <tr>
+            <th>Image</th>
+            <th>Title</th>
+            <th>Price</th>
+            <th>Old Price</th>
+            <th>Discount</th>
+            <th>Rating</th>
+            <th>Features</th>
+            <th>Link</th>
+        </tr>
+    </thead><tbody>`;
 
         products.forEach(p => {
             table += `<tr>
+                <td>${p.Image ? `<img src="${p.Image}" alt="Product Image" style="height:80px;">` : 'N/A'}</td>
                 <td>${p.Title}</td>
-                <td>${p.Price}</td>
-                <td>${p["Old Price"]}</td>
-                <td>${p.Discount}</td>
-                <td>${p.Rating}</td>
-                <td>${p.Features}</td>
-                <td><a href="${p.Link}" target="_blank">View</a></td>
-            </tr>`;
+                 <td>${p.Price}</td>
+                 <td>${p["Old Price"]}</td>
+                 <td>${p.Discount}</td>
+                 <td>${p.Rating}</td>
+                 <td>${p.Features}</td>
+                 <td><a href="${p.Link}" target="_blank">View</a></td>
+           </tr>`;
         });
 
         table += "</tbody></table>";
