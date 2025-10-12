@@ -5,7 +5,6 @@ window.startFlipkartScrap = async function() {
     const url = document.getElementById("flipkartUrl").value.trim();
     const tableDiv = document.getElementById("flipkartResults");
     const downloadBtn = document.getElementById("downloadFlipkart");
-    
 
     if (!url) {
         alert("Please enter a valid Flipkart search page URL.");
@@ -52,20 +51,20 @@ window.startFlipkartScrap = async function() {
 
         table += "</tbody></table>";
         tableDiv.innerHTML = table;
-        downloadBtn.style.display = "inline-block";
+        downloadBtn.style.display = "inline-block"; // show backend button
+
+        // ✅ Show the frontend Excel button now
+        const excelBtn = document.getElementById("downloadBtn");
+        if (excelBtn) {
+            excelBtn.style.display = "inline-block";
+        }
 
     } catch (error) {
         tableDiv.innerHTML = `<p style='color:red'>Error: ${error.message}</p>`;
     }
-}
+};
 
 // Download CSV
-tableDiv.innerHTML = table;
-downloadBtn.style.display = "inline-block"; // shows the backend download button
-
-// ✅ Also show the frontend "Download Table" (Excel) button
-const excelBtn = document.getElementById("downloadBtn");
-if (excelBtn) {
-    excelBtn.style.display = "inline-block";
-}
-
+window.downloadFlipkartData = function() {
+    window.location.href = "/scrap/download";
+};
