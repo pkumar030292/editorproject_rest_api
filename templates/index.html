@@ -341,25 +341,22 @@
     {% else %}
         <p>No table found on the page.</p>
     {% endif %}
-
-
-
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script>
 document.getElementById("downloadBtn").addEventListener("click", function () {
-    // Get the table element (update selector if your table has a different id)
-    var table = document.querySelector("table");
+    // Look for table inside the Flipkart results section
+    var table = document.querySelector("#flipkartResults table");
 
     if (!table) {
-        alert("No table found!");
+        alert("No table found in results!");
         return;
     }
 
     // Convert the HTML table to a workbook
-    var workbook = XLSX.utils.table_to_book(table, { sheet: "Data" });
+    var workbook = XLSX.utils.table_to_book(table, { sheet: "Scraped Data" });
 
-    // Trigger download of the Excel file
-    XLSX.writeFile(workbook, "scraped_data.xlsx");
+    // Download the Excel file
+    XLSX.writeFile(workbook, "flipkart_data.xlsx");
 });
 </script>
 
