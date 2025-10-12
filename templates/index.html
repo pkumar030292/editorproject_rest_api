@@ -189,7 +189,7 @@
       <p id="conversionStatus"></p>
     </section>
 <!--AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA________SCAPPER-->
-<section class="tab-content active" id="scrapSection">
+<section class="tab-content" id="scrapSection">
         <h2>Web Scraper</h2>
 
         <div id="flipkartSection">
@@ -197,6 +197,8 @@
             <input type="text" id="flipkartUrl" placeholder="https://www.flipkart.com/search?q=mobile" style="width:70%;"><br>
             <button onclick="startFlipkartScrap()">Start Scraping</button>
             <button id="downloadFlipkart" style="display:none;" onclick="downloadFlipkartData()">Download CSV</button>
+            <button id="downloadBtn" style="display:none;">Download Table</button>
+
 
             <div id="flipkartResults"></div>
         </div>
@@ -323,7 +325,6 @@
 <script src="{{ url_for('static', path='js/whiteboard.js') }}"></script>
 <!--<script src="{{ url_for('static', path='js/youtube.js') }}"></script>-->
 
-   <h2>Scraping Results</h2>
     <a href="/">Back to Home</a>
     <hr>
 
@@ -340,6 +341,27 @@
     {% else %}
         <p>No table found on the page.</p>
     {% endif %}
+
+
+
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script>
+document.getElementById("downloadBtn").addEventListener("click", function () {
+    // Get the table element (update selector if your table has a different id)
+    var table = document.querySelector("table");
+
+    if (!table) {
+        alert("No table found!");
+        return;
+    }
+
+    // Convert the HTML table to a workbook
+    var workbook = XLSX.utils.table_to_book(table, { sheet: "Data" });
+
+    // Trigger download of the Excel file
+    XLSX.writeFile(workbook, "scraped_data.xlsx");
+});
+</script>
 
 
 </body>
