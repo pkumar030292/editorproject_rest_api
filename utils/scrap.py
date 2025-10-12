@@ -102,7 +102,7 @@ def scrape_flipkart(url: str, max_pages: int = 20, fetch_detailed_features=False
 
                 # Fast features from search card itself
                 features = []
-                feature_container = card.select_one("div.xFVion")
+                feature_container = card.select_one("div._6NESgJ")
                 if feature_container:
                     features = [li.get_text(strip=True) for li in feature_container.find_all("li")]
                 features_text = " | ".join(features)
