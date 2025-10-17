@@ -9,6 +9,8 @@ import time
 import yt_dlp
 from fastapi import BackgroundTasks, Body
 from io import BytesIO
+
+from utils.scrap import get_all_products
 from utils.YTD import DOWNLOAD_DIR, get_available_formats, sanitize_url
 from utils import pdf2wordRouterApi
 from bs4 import BeautifulSoup
@@ -249,21 +251,28 @@ def preview_txt(payload: GenerateRequest):
 ######################
 #########################
 ###############
+# ------------------------------
+# Fetch products from DB
+# ------------------------------
 @app.get("/scrap/flipkart")
 def flipkart_scrap(url: str):
-    from utils.scrap import scrape_flipkart
-    result = scrape_flipkart(url)
-    return result
+    try:
+        from utils.scrap import scrape_flipkart
+        result = scrape_flipkart(url, max_pages=1)
+        return {"count": result['count'], "data": get_all_products()}
+    except Exception as e:
+        return JSONResponse({"error": str(e)}, status_code=500)
 
+
+# ------------------------------
+# Download CSV from outputs
+# ------------------------------
 @app.get("/scrap/download")
 def download_flipkart():
     path = "outputs/flipkart_all_pages.csv"
     if os.path.exists(path):
         return FileResponse(path, media_type="text/csv", filename="flipkart_results.csv")
     return JSONResponse({"error": "File not found"}, status_code=404)
-
-
-
     ##############YTD
 progress = {"download": 0, "convert": 0, "file": ""}
 
@@ -310,7 +319,7 @@ async def start_youtube(request: Request, background_tasks: BackgroundTasks):
                 'outtmpl': os.path.join(DOWNLOAD_DIR, '%(title)s.%(ext)s'),
                 'noplaylist': True,
                 'progress_hooks': [hook],
-                'ffmpeg_location': FFMPEG_EXE_PATH,
+                # 'ffmpeg_location': FFMPEG_EXE_PATH,
                 'merge_output_format': 'mp4',   # ensure merge
                   # 🧠 Throttling to prevent 429
                 'sleep_interval': 2,          # Wait 2 seconds between requests
@@ -355,3 +364,29 @@ from routers.whiteboard import router as whiteboard_router
 # Include whiteboard router
 app.include_router(whiteboard_router)
 
+
+@app.get("/", response_class=HTMLResponse)
+async def home_page(request: Request):
+    # Your existing code to render index.html
+    return templates.TemplateResponse("index.html", {
+        "request": request,
+        "templates": [],  # your templates_list
+        "files": []       # your files_list
+    })
+
+# Add these pages
+@app.get("/about", response_class=HTMLResponse)
+async def about_page(request: Request):
+    return templates.TemplateResponse("about.html", {"request": request})
+
+@app.get("/contact", response_class=HTMLResponse)
+async def contact_page(request: Request):
+    return templates.TemplateResponse("contact.html", {"request": request})
+
+@app.get("/privacy", response_class=HTMLResponse)
+async def privacy_page(request: Request):
+    return templates.TemplateResponse("privacy.html", {"request": request})
+
+@app.get("/terms", response_class=HTMLResponse)
+async def terms_page(request: Request):
+    return templates.TemplateResponse("terms.html", {"request": request})
