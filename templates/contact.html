@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Contact The Portal – Reach out to our support and team.">
+    <meta name="keywords" content="Contact, Support, Help, Customer Service, The Portal">
+    <meta name="author" content="The Portal Team">
+    <title>Contact – The Portal</title>
+    <link rel="stylesheet" href="{{ url_for('static', path='css/style.css') }}">
+    <style>
+        body { font-family: 'Montserrat', sans-serif; color: #333; background: #f9f9f9; margin: 0; padding: 0; }
+        header, footer { background: #079C23; color: #fff; padding: 15px 20px; }
+        main { max-width: 900px; margin: auto; padding: 20px; background: #fff; border-radius: 8px; margin-top: 20px; }
+        h2 { color: #079C23; }
+        section { margin-bottom: 25px; }
+        form input, form textarea, form button { width: 100%; padding: 10px; margin-bottom: 15px; border-radius: 5px; border: 1px solid #ccc; }
+        button { background: #079C23; color: #fff; border: none; cursor: pointer; }
+        button:hover { background: #057e1b; }
+    </style>
+</head>
+<body>
+<header>
+    <h1>The Portal</h1>
+    <a class="tab-btn active" href="/" data-tab="home">Home</a>
+</header>
+
+<main>
+    <h2>Contact Us</h2>
+    <section>
+        <p>If you have any questions, feedback, or need support, our team at The Portal is here to help. We strive to provide timely and professional assistance for all inquiries.</p>
+    </section>
+
+    <section>
+        <h3>Customer Support</h3>
+        <p>Email: <a href="mailto:support@theportal.com">support@theportal.com</a></p>
+        <p>Phone: +91 90000 43210</p>
+        <p>Response Time: Within 24 hours on business days</p>
+    </section>
+
+    <section>
+        <h3>Feedback Form</h3>
+        <form action="/submit-feedback" method="POST">
+            <input type="text" name="name" placeholder="Your Name" required>
+            <input type="email" name="email" placeholder="Your Email" required>
+            <input type="text" name="subject" placeholder="Subject" required>
+            <textarea name="message" rows="6" placeholder="Your Message" required></textarea>
+            <button type="submit">Submit</button>
+        </form>
+    </section>
+
+    <section>
+        <h3>Office Address</h3>
+        <p>The Portal Team<br>
+        123 Productivity Lane,<br>
+        Tech City, India – 560001</p>
+    </section>
+</main>
+
+<footer>
+    <p>© 2025 The Portal | <a href="/privacy" style="color:#fff;">Privacy Policy</a> | <a href="/terms" style="color:#fff;">Terms of Service</a></p>
+</footer>
+</body>
+</html>
