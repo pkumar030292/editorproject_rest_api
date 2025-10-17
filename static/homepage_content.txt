@@ -1,0 +1,44 @@
+<section id="ai-web-whiteboard" style="padding: 3rem; background: #f5f5f5; border-radius: 12px; margin: 2rem 0;">
+  <h2 style="font-family: 'Montserrat', sans-serif; color: #2575fc; text-align: center;">
+    🌟 Explore Our Powerful Tools
+  </h2>
+
+  <!-- AI Section -->
+  <div style="margin-top: 2rem; background: #fff; padding: 1.5rem; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
+    <h3 style="color: #ff5722; font-weight: 700;">🤖 Artificial Intelligence</h3>
+    <p><strong>AI</strong> is the backbone of our platform, enabling intelligent automation, predictive analytics, and dynamic content generation. Our AI modules help users generate documents, extract insights, and interact with data in smarter ways.</p>
+    <ul>
+      <li>Generate high-level design documents from structured inputs</li>
+      <li>Auto-fill templates using AI-driven field detection</li>
+      <li>Summarize long texts and extract key points instantly</li>
+      <li>Integrate with REST APIs for custom AI workflows</li>
+    </ul>
+    <p>Whether you're building reports, scraping data, or converting formats, our AI engine ensures speed, accuracy, and adaptability.</p>
+  </div>
+
+  <!-- Web Scraping Section -->
+  <div style="margin-top: 2rem; background: #fff; padding: 1.5rem; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
+    <h3 style="color: #2575fc; font-weight: 700;">🕸️ Web Scraping Tools</h3>
+    <p><strong>Web Scraping</strong> allows you to extract structured data from websites like Flipkart, Amazon, and more. Our scraping engine supports dynamic content parsing, table extraction, and schema validation.</p>
+    <ul>
+      <li>Scrape product details, reviews, and prices</li>
+      <li>Export data in JSON, CSV, or Excel formats</li>
+      <li>Built-in error handling and retry logic</li>
+      <li>REST API endpoints for integration into your apps</li>
+    </ul>
+    <p>Ideal for market research, competitor analysis, and building data-driven dashboards.</p>
+  </div>
+
+  <!-- Whiteboard Section -->
+  <div style="margin-top: 2rem; background: #fff; padding: 1.5rem; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
+    <h3 style="color: #ff9800; font-weight: 700;">📝 Interactive Whiteboard</h3>
+    <p>Our digital whiteboard enables <strong>real-time collaboration</strong> for teams and individuals. Draw, annotate, and brainstorm ideas visually from anywhere in the world.</p>
+    <ul>
+      <li>Multi-user editing with live updates</li>
+      <li>Sticky notes, shapes, and freehand drawing tools</li>
+      <li>Export boards to PDF or image formats</li>
+      <li>Perfect for design reviews, planning sessions, and online teaching</li>
+    </ul>
+    <p>Empower your team to think visually and work together seamlessly.</p>
+  </div>
+</section>
