@@ -1,375 +1,435 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="google-adsense-account" content="ca-pub-8203307660710028">
-    <title>The Portal</title>
-    <link rel="stylesheet" href="{{ url_for('static', path='css/style.css') }}">
-   <style>
-    /* Modern Compact Tabs Styling */
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="The Portal – A multifunction web toolkit offering document generation, PDF to Word conversion, web scraping, YouTube downloading, and an online whiteboard." />
+  <meta name="keywords" content="Document Generator, PDF Converter, Web Scraper, YouTube Downloader, Online Whiteboard, Tools Portal" />
+  <meta name="author" content="The Portal Team" />
+  <title>The Portal – Smart Online Toolkit</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Montserrat', sans-serif; background: #f8f9fa; color: #333; }
+        .tip { background: #fff3cd; border-left: 6px solid #ffeeba; padding: 1rem; margin-top: 1rem; border-radius: 8px; font-style: italic; }
+        pre { background: #f0f0f0; padding: 1rem; border-radius: 8px; overflow-x: auto; }
+        h2, h3 { margin-top: 1rem; }
+    </style>
+  <link rel="stylesheet" href="{{ url_for('static', path='css/style.css') }}">
+
+  <style>
     @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap');
-
     body {
-        font-family: 'Montserrat', sans-serif;
-        font-size: 14px; /* smaller font */
-        color: #333;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 14px;
+      color: #333;
+      margin: 0;
+      padding: 0;
+      background: #fff;
+    }
+    header {
+      background: #079C23;
+      color: #fff;
+      padding: 10px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    header h1 { margin: 0; font-size: 20px; }
+    nav a {
+      color: #fff;
+      margin-left: 15px;
+      text-decoration: none;
+      font-weight: 600;
+    }
+    nav a:hover { text-decoration: underline; }
+    main.container {
+      padding: 20px;
+      max-width: 1100px;
+      margin: auto;
+    }
+    footer {
+      text-align: center;
+      padding: 20px;
+      font-size: 13px;
+      background: #f2f2f2;
+      margin-top: 40px;
     }
 
-    .tabs {
-        display: flex;
-        gap: 8px;
-        margin-bottom: 15px;
-    }
-
+    /* --- Tabs Styling --- */
+    .tabs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 15px; }
     .tab-btn {
-        padding: 6px 12px;
-        cursor: pointer;
-        border: 1px solid #ccc;
-        border-bottom: none;
-        background: #f0f0f0;
-        font-weight: 600;
-        border-radius: 8px 8px 0 0;
-        transition: all 0.3s ease;
-        font-size: 13px;
-        letter-spacing: 0.5px;
-        color: #444;
+      padding: 6px 12px;
+      cursor: pointer;
+      border: 1px solid #ccc;
+      border-bottom: none;
+      background: #f0f0f0;
+      font-weight: 600;
+      border-radius: 8px 8px 0 0;
+      transition: all 0.3s ease;
+      font-size: 13px;
+      letter-spacing: 0.5px;
+      color: #444;
     }
-
     .tab-btn:hover {
-        background: #d3f8d3;
-        color: #222;
-        transform: translateY(-2px);
-        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      background: #d3f8d3;
+      color: #222;
+      transform: translateY(-2px);
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     }
-
     .tab-btn.active {
-        background: #079C23;
-        color: #fff;
-        border-bottom: 4px solid #F40B1F;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.15);
+      background: #079C23;
+      color: #fff;
+      border-bottom: 4px solid #F40B1F;
     }
-
     .tab-content {
-        display: none;
-        border: 1px solid #ccc;
-        padding: 12px 15px;
-        border-radius: 0 8px 8px 8px;
-        background: #fafafa;
-        box-shadow: inset 0 0 5px rgba(0,0,0,0.03);
-        font-size: 13px;
-        line-height: 1.4;
+      display: none;
+      border: 1px solid #ccc;
+      padding: 15px;
+      border-radius: 0 8px 8px 8px;
+      background: #fafafa;
     }
-
-    .tab-content.active {
-        display: block;
+    .tab-content.active { display: block; }
+    select, input, button {
+      margin: 5px 0;
+      padding: 6px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
     }
-
-    /* Optional: subtle scrollbar for content overflow */
-    .tab-content::-webkit-scrollbar {
-        width: 6px;
+    button {
+      background: #079C23;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      transition: 0.3s;
     }
-    .tab-content::-webkit-scrollbar-thumb {
-        background: #ccc;
-        border-radius: 3px;
+    button:hover { background: #057e1b; }
+    .ad-container {
+      text-align: center;
+      margin: 20px 0;
+      background: #f9f9f9;
+      border: 1px dashed #ddd;
+      padding: 10px;
+      color: #999;
     }
-</style>
-
+    body { font-family: Arial, sans-serif; margin:0; padding:0; background:#f8f9fa; }
+  nav { background:#343a40; color:white; padding:10px 20px; display:flex; gap:20px; }
+  nav a { color:white; text-decoration:none; cursor:pointer; padding:5px 10px; border-radius:4px; }
+  nav a.active, nav a:hover { background:#495057; }
+  .content { padding:20px; display:none; }
+  .content.active { display:block; }
+  .homepage { padding:20px; background:white; margin:20px; border-radius:8px; box-shadow:0 2px 5px rgba(0,0,0,0.1); }
+  </style>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8203307660710028"
+     crossorigin="anonymous"></script>
 </head>
+
 <body>
-<header>
+ <header style="text-align:center; padding:2rem; background:linear-gradient(to right,#6a11cb,#2575fc); color:#fff;">
+        <h1>🌟 Welcome to <span style="color:#ffeb3b;">AI-Powered Document Generator</span></h1>
+        <p style="font-style:italic;">Simplifying, automating, and streamlining document creation with cutting-edge technology.</p>
+    </header>
+
+  <header>
     <h1>The Portal</h1>
-    <!-- Manage DB Button -->
-    <button onclick="window.location.href='/dbpage'">Manage DB</button>
+    <nav>
+      <a class="tab-btn active" data-tab="home">Home</a>
+      <a class="tab-btn" href="/about">About</a>
+      <a class="tab-btn" href="/contact">Contact</a>
+      <a class="tab-btn" href="/privacy">Privacy</a>
+    </nav>
 
-
-</header>
-<main class="container">
-    <!-- Tabs -->
+  </header>
+   <!-- Tabs -->
     <div class="tabs">
-        <div class="tab-btn active" data-tab="generateSection">Generate Template</div>
-        <div class="tab-btn" data-tab="downloadSection">Download Template</div>
-        <div class="tab-btn" data-tab="uploadSection">Upload New Template</div>
-        <div class="tab-btn" data-tab="deleteSection">Delete Template</div>
-        <div class="tab-btn" data-tab="pdf2wordSection">Convert Documents</div>
-        <div class="tab-btn" data-tab="scrapSection">Web Scraper</div>
-        <div class="tab-btn" data-tab="youtubeSection">YouTube Downloader</div>
-        <div class="tab-btn" data-tab="whiteboardSection">Whiteboard</div>
-
+      <div class="tab-btn active" data-tab="homeContent">Home</div>
+      <div class="tab-btn" data-tab="generateSection">Generate Template</div>
+      <div class="tab-btn" data-tab="downloadSection">Download Template</div>
+      <div class="tab-btn" data-tab="uploadSection">Upload Template</div>
+      <div class="tab-btn" data-tab="deleteSection">Delete Template</div>
+      <div class="tab-btn" data-tab="pdf2wordSection">Convert Documents</div>
+      <div class="tab-btn" data-tab="scrapSection">Web Scraper</div>
+      <div class="tab-btn" data-tab="youtubeSection">YouTube Downloader</div>
+      <div class="tab-btn" data-tab="whiteboardSection">Whiteboard</div>
     </div>
+  <div id="home" class="content active homepage">
+  <h1>Welcome to the AI-Powered Document Generator</h1>
+  <p>Our platform is designed to simplify, automate, and streamline the creation of customized documents...</p>
+  <!-- Add all homepage description here -->
+  </div>
+  <div id="homeContent" class="content active homepage"></div>
+ <script>
+        async function loadHomeContent() {
+            try {
+                const response = await fetch('/static/homepage_content.txt');
+                if (!response.ok) throw new Error('Content file not found!');
+                const content = await response.text();
+                document.getElementById('homeContent').innerHTML = content;
+            } catch (err) {
+                console.error(err);
+                document.getElementById('homeContent').innerHTML = '<p style="color:red;">Failed to load homepage content.</p>';
+            }
+        }
+        loadHomeContent();
+    </script>
 
-    <!-- Document Generation Section -->
+
+<script>
+const tabs = document.querySelectorAll(".tab-btn");
+const contents = document.querySelectorAll(".content");
+
+tabs.forEach(tab => {
+  tab.addEventListener("click", () => {
+    // Remove active class from all tabs and contents
+    tabs.forEach(t => t.classList.remove("active"));
+    contents.forEach(c => c.classList.remove("active"));
+
+    // Add active class to clicked tab and corresponding content
+    tab.classList.add("active");
+    const activeContent = document.getElementById(tab.dataset.tab);
+    activeContent.classList.add("active");
+  });
+});
+</script>
+  <main class="container">
+
+
+    <section>
+      <h2>Welcome to The Portal</h2>
+      <p>The Portal is your all-in-one online productivity suite. You can generate documents, convert files, scrape data, download YouTube videos, and collaborate on a whiteboard — all in one secure space.</p>
+    </section>
+
+    <!-- Generate Section -->
     <section class="tab-content" id="generateSection">
-        <h2>Generate Document</h2>
-        <label for="template">Select Template:</label>
-        <select id="template" class="gsselect" onchange="loadSchema()">
-            <option value="">Select Template</option>
-            {% for t in templates %}
-            <option value="{{ t }}">{{ t }}</option>
-            {% endfor %}
-        </select>
-        <div id="fields"></div>
-        <div class="buttons">
-            <button onclick="generateDoc()">Generate Document</button>
-            <button onclick="previewDoc()">Preview Document</button>
-        </div>
-        <pre id="previewOutput"></pre>
+      <h2>Generate Template – Detailed Guide</h2>
+            <p>The Generate Template tab allows you to create fully customized documents using your pre-defined templates. Follow these steps carefully to understand how the process works from template upload to final file download.</p>
+
+            <h3>Step 1: Upload Your Template</h3>
+            <p>
+                - Navigate to the <strong>Upload Template</strong> tab. <br>
+                - Select the file you want to use as a template. Templates can be in <strong>Text (.txt)</strong> or <strong>Word (.docx)</strong> format. <br>
+                - For <strong>Text Files</strong>, placeholders must be written as <code>{% raw %}{{PlaceHolder}}{% endraw %}</code>. These placeholders will correspond to input fields on the web page. <br>
+                - For <strong>Word Files</strong>, placeholders must be written as <code>{% raw %}{{{PlaceHolder}}}{% endraw %}</code>. These placeholders will also be converted into labels on the webpage for user input.
+            </p>
+
+            <h3>Step 2: Update Placeholders</h3>
+            <p>
+                - Before uploading, you can edit your template to ensure all dynamic content is represented by placeholders. <br>
+                - Make sure each placeholder is unique and clearly named, as these will become input labels on the Generate tab. <br>
+                - Once your template is ready, click <strong>Upload</strong> in the Upload Template tab. This will save your template to the system for further use.
+            </p>
+
+            <h3>Step 3: Template Availability</h3>
+            <p>
+                - After successful upload, your template will appear in the <strong>Generate Template</strong> dropdown menu. <br>
+                - The system automatically detects all placeholders and maps them to input fields. <br>
+                - Users can now select the template to generate customized files.
+            </p>
+
+            <h3>Step 4: Enter Placeholder Values</h3>
+            <p>
+                - Select your uploaded template from the dropdown menu in the Generate Template tab. <br>
+                - All placeholders defined in the template will appear as input fields. <br>
+                - Enter the desired values for each placeholder. <br>
+                - You can either click <strong>Preview</strong> to see how the template will look with the entered data or click <strong>Generate</strong> to create the final file.
+            </p>
+
+            <h3>Step 5: File Generation</h3>
+            <p>
+                - Once the <strong>Generate</strong> button is clicked, the system automatically replaces all placeholders with the entered data. <br>
+                - For text files, each <code>{% raw %}{{PlaceHolder}}{% endraw %}</code> is replaced by the corresponding input. <br>
+                - For Word files, each <code>{% raw %}{{{PlaceHolder}}}{% endraw %}</code> is replaced while maintaining the formatting of the original document. <br>
+                - The modified file is saved in the <strong>Generated Files</strong> directory with the current date and time appended to the filename.
+            </p>
+
+            <h3>Step 6: Download Generated Files</h3>
+            <p>
+                - Navigate to the <strong>Download</strong> tab. <br>
+                - Your newly generated file will appear in the file list with a timestamp for easy identification. <br>
+                - Click the filename to download it instantly. The downloaded file will contain all the user-provided placeholder values exactly as entered.
+            </p>
+
+            <h3>Additional Notes:</h3>
+            <ul>
+                <li>Ensure that all placeholders in your template are correctly named and enclosed in  <code>{% raw %}{{{PlaceHolder}}}{% endraw %}</code> or <code>{% raw %}{{PlaceHolder}}{% endraw %}</code> depending on file type.</li>
+                <li>Templates can be updated anytime by re-uploading a new version. The system will automatically reflect the changes in the Generate tab.</li>
+                <li>Use the Preview option to verify your inputs and template formatting before generating the final file.</li>
+                <li>All generated files are timestamped to avoid overwriting and to maintain a history of all creations.</li>
+                <li>This workflow ensures a seamless transition from template design to file generation with minimal manual effort.</li>
+            </ul>
+
+            <p>By following these steps, users can efficiently convert templates into fully customized documents in both text and Word formats, ensuring professional and accurate results every time.</p>
+
+      <label for="template">Select Template:</label>
+      <select id="template" onchange="loadSchema()">
+        <option value="">Select Template</option>
+        {% for t in templates %}
+          <option value="{{ t }}">{{ t }}</option>
+        {% endfor %}
+      </select>
+      <div id="fields"></div>
+      <div class="buttons">
+        <button onclick="generateDoc()">Generate</button>
+        <button onclick="previewDoc()">Preview</button>
+      </div>
+      <pre id="previewOutput"></pre>
     </section>
 
-    <!-- File Download Section -->
+    <!-- Download Section -->
     <section class="tab-content" id="downloadSection">
-        <h2>Download Section</h2>
-        <label for="files">Select File:</label>
-        <select id="files" class="dsselect" onchange="if(this.value) window.location.href='/download_doc/' + encodeURIComponent(this.value)">
-
-
-            <option value="">Select File</option>
-            {% for f in files %}
-            <option value="{{ f }}">{{ f }}</option>
-            {% endfor %}
-        </select>
+      <h2>Download Template</h2>
+      <select id="files" onchange="if(this.value) window.location.href='/download_doc/' + encodeURIComponent(this.value)">
+        <option value="">Select File</option>
+        {% for f in files %}
+          <option value="{{ f }}">{{ f }}</option>
+        {% endfor %}
+      </select>
     </section>
 
-    <!-- Template Upload Section -->
+    <!-- Upload Section -->
     <section class="tab-content" id="uploadSection">
-        <h2>Upload New Template</h2>
-        <form id="uploadForm" enctype="multipart/form-data">
-            <input type="file" id="templateFile" name="file" required>
-            <button type="submit">Upload</button>
-        </form>
-        <p id="uploadStatus"></p>
-        <h4>
-            For Text File use
-            <span style="color:red; font-weight:bold;">{% raw %}{{{% endraw %}</span>
-            <span style="color:blue; font-weight:bold;">Input Field Name</span>
-            <span style="color:red; font-weight:bold;">{% raw %}}}{% endraw %}</span>
-            to make Template and for Word file use
-            <span style="color:red; font-weight:bold;">{% raw %}{{{{% endraw %}</span>
-            <span style="color:blue; font-weight:bold;">Input Field Name</span>
-            <span style="color:red; font-weight:bold;">{% raw %}}}}{% endraw %}</span>.
-        </h4>
+      <h2>Upload New Template</h2>
+      <form id="uploadForm" enctype="multipart/form-data">
+        <input type="file" id="templateFile" name="file" required>
+        <button type="submit">Upload</button>
+      </form>
+      <p id="uploadStatus"></p>
+      <h4>
+    {% raw %}
+    For Text File use <span style="color:red; font-weight:bold;">{{</span>
+    <span style="color:blue; font-weight:bold;">Input Field Name</span>
+    <span style="color:red; font-weight:bold;">}}</span>
+    to make Template and for Word file use
+    <span style="color:red; font-weight:bold;">{{{{</span>
+    <span style="color:blue; font-weight:bold;">Input Field Name</span>
+    <span style="color:red; font-weight:bold;">}}}}</span>.
+    {% endraw %}
+</h4>
+
     </section>
 
-    <!-- Template Delete Section -->
+    <!-- Delete Section -->
     <section class="tab-content" id="deleteSection">
-        <h2>Delete Template</h2>
-        <div class="section">
-            <label>Template Name:</label>
-            <select id="template-list">
-                <option value="">Select Template</option>
-                {% for t in templates %}
-                <option value="{{ t }}">{{ t }}</option>
-                {% endfor %}
-            </select>
-            <label>Username:</label>
-            <input type="text" id="del-username">
-            <label>Password:</label>
-            <input type="password" id="del-password">
-            <button type="button" onclick="deleteTemplate()">Delete Template</button>
-            <p id="del-status"></p>
-        </div>
-        <h4>
-           <span style="color:red; font-weight:bold;">{% raw %}Contact Administrator to Delete Template{% endraw %}</span>
-        <h4>
+      <h2>Delete Template</h2>
+      <select id="template-list">
+        <option value="">Select Template</option>
+        {% for t in templates %}
+          <option value="{{ t }}">{{ t }}</option>
+        {% endfor %}
+      </select>
+      <input type="text" id="del-username" placeholder="Username">
+      <input type="password" id="del-password" placeholder="Password">
+      <button type="button" onclick="deleteTemplate()">Delete Template</button>
+      <p id="del-status"></p>
+      <h4><span style="color:red;">Contact Administrator to Delete Template</span></h4>
     </section>
 
+    <!-- PDF2Word Section -->
     <section class="tab-content" id="pdf2wordSection">
       <h2>Convert PDF / Image</h2>
       <input type="file" id="inputFile" accept=".pdf,.png,.jpg,.jpeg,.bmp,.tiff">
-      <br/>
-      <label>
-        Conversion Type:
-        <select id="conversionType">
-          <option value="pdf-word">PDF → Word (native)</option>
-          <option value="ocr-pdf-word">PDF → Word (OCR fallback)</option>
-          <option value="image-word">Image → Word</option>
-          <option value="image-text">Image → Text (.txt)</option>
-        </select>
-      </label>
-      <br/>
+      <select id="conversionType">
+        <option value="pdf-word">PDF → Word</option>
+        <option value="ocr-pdf-word">PDF → Word (OCR)</option>
+        <option value="image-word">Image → Word</option>
+        <option value="image-text">Image → Text</option>
+      </select>
       <button type="button" onclick="uploadAndConvertFile()">Convert</button>
       <p id="conversionStatus"></p>
     </section>
-<!--AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA________SCAPPER-->
-<section class="tab-content" id="scrapSection">
-        <h2>Web Scraper</h2>
 
-        <div id="flipkartSection">
-            <label for="flipkartUrl">Enter Flipkart Search Page URL:</label><br>
-            <input type="text" id="flipkartUrl" placeholder="https://www.flipkart.com/search?q=mobile" style="width:70%;"><br>
-            <button onclick="startFlipkartScrap()">Start Scraping</button>
-            <button id="downloadFlipkart" style="display:none;" onclick="downloadFlipkartData()">Download CSV</button>
-            <button id="downloadBtn" style="display:none;">Download Table</button>
-
-
-
-            <div id="flipkartResults"></div>
-        </div>
-    </section>
-
-<!-- include JS -->
-<!--<script src="/static/js/scrap.js"></script>-->
-
-
-
-<!--@######################YTD-->
-
-    <style>
-        body { font-family: Arial, sans-serif; font-size: 14px; color: #333; }
-        .tabs { display: flex; gap: 8px; margin-bottom: 15px; }
-        .tab-btn { padding: 6px 12px; cursor: pointer; border: 1px solid #ccc; border-bottom: none; background: #f0f0f0; border-radius: 8px 8px 0 0; }
-        .tab-btn.active { background: #079C23; color: #fff; border-bottom: 4px solid #F40B1F; }
-        .tab-content { display: none; border: 1px solid #ccc; padding: 12px; border-radius: 0 8px 8px 8px; background: #fafafa; }
-        .tab-content.active { display: block; }
-        select, input, button { margin: 5px 0; padding: 5px; width: 400px; }
-        #youtube-downloadBtn { display: none; }
-    </style>
- <!-- YouTube Downloader Section -->
-<!--YTD Section-->
-<section class="tab-content" id="youtubeSection">
-    <h2>YouTube Downloader</h2>
-    <h5>Note: If no sound in any video and download in another format</h5>
-    <input type="text" id="youtube-url" placeholder="Enter YouTube URL" style="width:400px">
-    <button onclick="prepareYoutubeDownload()">Fetch Formats</button>
-
-    <select id="format-select" style="width:400px; margin-top:10px;">
-        <option value="">Select format</option>
-    </select>
-    <button onclick="startYoutubeDownload()">Submit</button>
-
-    <div class="progress" style="margin-top:15px;">
-        <p>Download Progress: <span id="youtube-download">0%</span></p>
-        <p>Conversion Progress: <span id="youtube-convert">0%</span></p>
-
-        <label for="youtube-file-select">Select File:</label>
-        <select id="youtube-file-select" style="width:70%; margin-bottom:10px;"></select>
-        <button id="youtube-downloadBtn" style="display:none;" onclick="downloadYoutubeFile()">Download Selected File</button>
-    </div>
-</section>
-
-     <script>
-        // Tab Switching
-        document.querySelectorAll(".tab-btn").forEach(btn => {
-            btn.addEventListener("click", () => {
-                document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
-                document.querySelectorAll(".tab-content").forEach(c => c.classList.remove("active"));
-                btn.classList.add("active");
-                document.getElementById(btn.dataset.tab).classList.add("active");
-            });
-        });
-    </script>
-<script src="{{ url_for('static', path='js/youtube.js') }}"></script>
-
-<!--#######################################whiteboard-->
-<section class="tab-content" id="whiteboardSection">
-    <h2>Professional Whiteboard</h2>
-    <div id="whiteboard-toolbar">
-    <label>Color: <input type="color" id="wbColor" value="#000000"></label>
-    <label>Width: <input type="number" id="wbWidth" value="3" min="1" max="20"></label>
-    <button id="wbUndo">Undo</button>
-    <button id="wbRedo">Redo</button>
-    <button id="wbEraser">Eraser</button>
-    <button id="wbClear">Clear All</button>
-    <button id="wbSnapshot">Take Snapshot</button>
-    <button id="wbRecord">Start/Stop Recording</button>
-    <button id="wbFullscreen">Full Screen</button>
-    <select id="wbSymbols">
-        <option value="">Add Symbol</option>
-        <option value="circle">Circle</option>
-        <option value="square">Square</option>
-        <option value="arrow">Arrow</option>
-    </select>
-</div>
-
-    <canvas id="whiteboardCanvas"></canvas>
-</section>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-
-<!--########################################-->
-</main>
-
+    <!-- Web Scraper -->
+    <section class="tab-content" id="scrapSection">
+      <h2>Web Scraper</h2>
+      <input type="text" id="flipkartUrl" placeholder="https://www.flipkart.com/search?q=mobile" style="width:70%;">
+      <button onclick="startFlipkartScrap()">Start Scraping</button>
+      <button id="downloadFlipkart" style="display:none;" onclick="downloadFlipkartData()">Download CSV</button>
+      <button id="downloadBtn" style="display:none;">Download Table</button>
+        <button id="downloadFlipkartTableBtn">Download Flipkart Table</button>
 <script>
-    // Tab Switching
-    document.querySelectorAll(".tab-btn").forEach(btn => {
-        btn.addEventListener("click", () => {
-            // remove active class from all
-            document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
-            document.querySelectorAll(".tab-content").forEach(c => c.classList.remove("active"));
-
-            // add to selected
-            btn.classList.add("active");
-            document.getElementById(btn.dataset.tab).classList.add("active");
-        });
-    });
-</script>
-
-<!-- Scripts -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- optional if $ needed -->
-<script src="{{ url_for('static', path='js/scrap.js') }}"></script>
-<script>
-    // Tab Switching
-    document.querySelectorAll(".tab-btn").forEach(btn => {
-        btn.addEventListener("click", () => {
-            document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
-            document.querySelectorAll(".tab-content").forEach(c => c.classList.remove("active"));
-            btn.classList.add("active");
-            document.getElementById(btn.dataset.tab).classList.add("active");
-        });
-    });
-</script>
-
-
-<script src="{{ url_for('static', path='js/main.js') }}"></script>
-<script src="{{ url_for('static', path='js/generate.js') }}"></script>
-<script src="{{ url_for('static', path='js/upload.js') }}"></script>
-<script src="{{ url_for('static', path='js/deleteTemplate.js') }}"></script>
-<script src="{{ url_for('static', path='js/pdf2word.js') }}"></script>
-<script src="{{ url_for('static', path='js/scrap.js') }}"></script>
-<script src="{{ url_for('static', path='js/whiteboard.js') }}"></script>
-<!--<script src="{{ url_for('static', path='js/youtube.js') }}"></script>-->
-
-    <a href="/">Back to Home</a>
-    <hr>
-
-    {% if table %}
-        <table border="1" cellpadding="5" cellspacing="0">
-            {% for row in table %}
-                <tr>
-                    {% for col in row %}
-                        <td>{{ col }}</td>
-                    {% endfor %}
-                </tr>
-            {% endfor %}
-        </table>
-    {% else %}
-        <p>No table found on the page.</p>
-    {% endif %}
-
-
-
-
-
-
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-<script>
-document.getElementById("downloadBtn").addEventListener("click", function () {
-    // Find the table inside Flipkart Results (where your scraper displays data)
-    var table = document.querySelector("#flipkartResults table");
-
-    if (!table) {
-        alert("No scraped table found yet!");
-        return;
-    }
-
-    // Convert HTML table → Excel workbook
-    var workbook = XLSX.utils.table_to_book(table, { sheet: "Scraped Data" });
-
-    // Download file directly from browser
+document.getElementById("downloadFlipkartTableBtn").addEventListener("click", function() {
+    const table = document.querySelector("#flipkartResults table");
+    if (!table) { alert("No Flipkart table found!"); return; }
+    const workbook = XLSX.utils.table_to_book(table, { sheet: "Flipkart Data" });
     XLSX.writeFile(workbook, "flipkart_data.xlsx");
 });
 </script>
 
+      <div id="flipkartResults"></div>
+    </section>
 
+    <!-- YouTube Downloader -->
+    <section class="tab-content" id="youtubeSection">
+      <h2>YouTube Downloader</h2>
+      <input type="text" id="youtube-url" placeholder="Enter YouTube URL" style="width:400px;">
+      <button onclick="prepareYoutubeDownload()">Fetch Formats</button>
+      <select id="format-select" style="width:400px; margin-top:10px;">
+        <option value="">Select format</option>
+      </select>
+      <button onclick="startYoutubeDownload()">Submit</button>
+      <div class="progress" style="margin-top:15px;">
+        <p>Download Progress: <span id="youtube-download">0%</span></p>
+        <p>Conversion Progress: <span id="youtube-convert">0%</span></p>
+        <select id="youtube-file-select" style="width:70%; margin-bottom:10px;"></select>
+        <button id="youtube-downloadBtn" style="display:none;" onclick="downloadYoutubeFile()">Download Selected File</button>
+      </div>
+    </section>
 
+    <!-- Whiteboard -->
+    <section class="tab-content" id="whiteboardSection">
+      <h2>Professional Whiteboard</h2>
+      <div id="whiteboard-toolbar">
+        <label>Color: <input type="color" id="wbColor" value="#000000"></label>
+        <label>Width: <input type="number" id="wbWidth" value="3" min="1" max="20"></label>
+        <button id="wbUndo">Undo</button>
+        <button id="wbRedo">Redo</button>
+        <button id="wbEraser">Eraser</button>
+        <button id="wbClear">Clear</button>
+        <button id="wbSnapshot">Snapshot</button>
+      </div>
+      <canvas id="whiteboardCanvas"></canvas>
+    </section>
+
+    <!-- Ads -->
+    <div class="ad-container">Ad</div>
+    <div class="ad-container">Ad</div>
+
+  </main>
+
+  <footer>
+    © 2025 The Portal | <a href="/terms">Terms</a> | <a href="/privacy">Privacy</a>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="{{ url_for('static', path='js/main.js') }}"></script>
+  <script src="{{ url_for('static', path='js/generate.js') }}"></script>
+  <script src="{{ url_for('static', path='js/upload.js') }}"></script>
+  <script src="{{ url_for('static', path='js/deleteTemplate.js') }}"></script>
+  <script src="{{ url_for('static', path='js/pdf2word.js') }}"></script>
+  <script src="{{ url_for('static', path='js/scrap.js') }}"></script>
+  <script src="{{ url_for('static', path='js/whiteboard.js') }}"></script>
+  <script src="{{ url_for('static', path='js/youtube.js') }}"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+  <script>
+    // Tab Switching
+    document.querySelectorAll(".tab-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+        document.querySelectorAll(".tab-content").forEach(c => c.classList.remove("active"));
+        btn.classList.add("active");
+        document.getElementById(btn.dataset.tab).classList.add("active");
+      });
+    });
+
+    // Excel Export
+    document.getElementById("downloadBtn").addEventListener("click", function () {
+      var table = document.querySelector("#flipkartResults table");
+      if (!table) { alert("No scraped table found!"); return; }
+      var wb = XLSX.utils.table_to_book(table, { sheet: "Scraped Data" });
+      XLSX.writeFile(wb, "flipkart_data.xlsx");
+    });
+  </script>
 </body>
 </html>
