@@ -1,8 +1,5 @@
 import datetime
 import sqlite3
-
-from flask import jsonify
-
 from utils.sarkariresult import DB_FILE
 from utils import sarkariresult  # not sarkariresult_db
 
@@ -448,9 +445,9 @@ def get_all_results():
 def api_results():
     try:
         data = get_all_results()
-        return jsonify({"status": "success", "count": len(data), "data": data})
+        return JSONResponse({"status": "success", "count": len(data), "data": data})
     except Exception as e:
-        return jsonify({"status": "error", "message": str(e)})
+        return JSONResponse({"status": "error", "message": str(e)})
 
 
 
