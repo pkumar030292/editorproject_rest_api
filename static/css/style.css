@@ -3,22 +3,24 @@ body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #f8f9fa;
+    background: #f4f6f8;
     color: #333;
+    line-height: 1.6;
 }
 
 header {
-    background-color: #007BFF;
+    background: linear-gradient(90deg, #007BFF, #0056b3);
     color: #fff;
     padding: 20px 0;
     text-align: center;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
 }
 
 h1 {
     margin: 0;
-    font-size: 1.8rem;
-    font-weight: 600;
+    font-size: 2rem;
+    font-weight: 700;
+    letter-spacing: 1px;
 }
 
 .container {
@@ -33,26 +35,26 @@ h1 {
 /* ===================== Card Styling ===================== */
 .card {
     background-color: #fff;
-    border-radius: 12px;
+    border-radius: 16px;
     padding: 20px;
-    width: 260px;
+    width: 280px;
     max-width: 95%;
     display: flex;
     flex-direction: column;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.1);
     transition: transform 0.3s, box-shadow 0.3s;
 }
 
 .card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    transform: translateY(-6px);
+    box-shadow: 0 12px 28px rgba(0,0,0,0.2);
 }
 
 .card h2 {
     margin-top: 0;
-    margin-bottom: 10px;
-    font-size: 1rem;
-    font-weight: 600;
+    margin-bottom: 12px;
+    font-size: 1.1rem;
+    font-weight: 700;
     color: #007BFF;
 }
 
@@ -64,10 +66,10 @@ label {
 }
 
 select, textarea, input {
-    padding: 6px 8px;
-    border-radius: 6px;
+    padding: 8px 10px;
+    border-radius: 8px;
     border: 1px solid #ccc;
-    font-size: 0.9rem;
+    font-size: 0.95rem;
     box-sizing: border-box;
     width: 100%;
     font-family: inherit;
@@ -76,28 +78,24 @@ select, textarea, input {
 
 select:focus, textarea:focus, input:focus {
     border-color: #007BFF;
-    box-shadow: 0 0 6px rgba(0,123,255,0.25);
+    box-shadow: 0 0 8px rgba(0,123,255,0.25);
     outline: none;
 }
 
 /* Small select dropdowns */
-.dsselect {
-    width: 120px;
-}
-.gsselect {
-    width: 140px;
-}
+.dsselect { width: 120px; }
+.gsselect { width: 140px; }
 
 /* ===================== Buttons ===================== */
 button {
-    padding: 6px 12px;
-    font-size: 0.85rem;
+    padding: 8px 16px;
+    font-size: 0.9rem;
     font-weight: 600;
     cursor: pointer;
     border: none;
     border-radius: 8px;
     transition: all 0.3s ease;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    box-shadow: 0 3px 8px rgba(0,0,0,0.2);
 }
 
 .btn-gradient {
@@ -107,7 +105,7 @@ button {
 .btn-gradient:hover {
     background: linear-gradient(135deg, #0056b3, #003f7f);
     transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.3);
 }
 
 .btn-outline {
@@ -118,22 +116,20 @@ button {
 .btn-outline:hover {
     background: #007BFF;
     color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.2);
 }
 
-.buttons {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
+.buttons { display: flex; flex-direction: column; gap: 10px; }
 
 /* ===================== Output / Preview ===================== */
 pre {
-    background-color: #f1f3f5;
+    background-color: #eef1f5;
     padding: 12px;
     overflow-x: auto;
-    border-radius: 6px;
-    min-height: 40px;
-    font-size: 0.85rem;
+    border-radius: 8px;
+    min-height: 50px;
+    font-size: 0.9rem;
 }
 
 /* ===================== Upload Status ===================== */
@@ -144,12 +140,9 @@ pre {
 }
 
 /* ===================== Responsive ===================== */
-@media (max-width: 900px) {
-    .card { width: 45%; }
-}
-@media (max-width: 600px) {
-    .card { width: 90%; }
-}
+@media (max-width: 900px) { .card { width: 48%; } }
+@media (max-width: 600px) { .card { width: 95%; } }
+
 canvas {
   border: 2px solid #444;
   border-radius: 10px;
@@ -157,23 +150,126 @@ canvas {
   background-color: #f8f8f8;
 }
 
-#controls {
-  margin-top: 15px;
-}
+#controls { margin-top: 15px; }
 
 #chatbox {
-  width: 300px;
+  width: 320px;
   margin: 20px auto;
   text-align: left;
   border: 1px solid #ccc;
-  padding: 10px;
+  padding: 12px;
   background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
 
 #messages {
-  height: 150px;
+  height: 180px;
   overflow-y: auto;
   border: 1px solid #ddd;
   margin-bottom: 10px;
-  padding: 5px;
+  padding: 8px;
+  background: #fafafa;
+  border-radius: 6px;
 }
+
+/* ===================== SarkariResult Buttons ===================== */
+.main-layout {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+}
+
+/* Sidebar */
+.sidebar {
+    width: 250px;      /* fixed width */
+    flex-shrink: 0;
+}
+
+
+
+#results-container {
+    overflow-x: auto;       /* horizontal scroll only */
+    overflow-y: hidden;     /* optional: hide vertical scroll */
+    width: 100%;            /* full page width */
+    border: 1px solid #ccc; /* optional: border to show scroll area */
+    border-radius: 8px;
+}
+
+
+#results {
+    min-width: 800px;       /* table minimum width */
+    width: max-content;     /* table grows with content */
+}
+
+#results th:first-child,
+#results td:first-child {
+    position: sticky;
+    left: 0;
+    background-color: #fff;
+    z-index: 2;
+}
+
+
+
+
+.table-wrapper {
+    overflow-x: adjust;
+    -webkit-overflow-scrolling: touch; /* smooth scroll on mobile */
+}
+
+
+.sr-table {
+    width: max-content;   /* table width grows with content */
+    min-width: 100%;      /* table at least full container width */
+    border-collapse: collapse;
+}
+
+.sr-table th, .sr-table td {
+    border: 1px solid #ccc;
+    padding: 4px 8px;
+    text-align: left;
+    word-break: break-word;
+    white-space: normal;
+    vertical-align: top;
+    max-width: 200px;  /* optional, adjust for wrapping */
+}
+
+.sr-table th {
+    background-color: #079C23;
+    color: white;
+    font-weight: 600;
+}
+
+
+.sr-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.sr-table tr:hover {
+    background-color: #e6f7ff;
+}
+
+.sr-table a {
+    color: #007BFF;
+    text-decoration: none;
+}
+
+.sr-table a:hover {
+    text-decoration: underline;
+}
+
+.sr-table button {
+    padding: 3px 6px;
+    font-size: 0.75rem;
+    border-radius: 4px;
+    border: none;
+    background: #007BFF;
+    color: #fff;
+    cursor: pointer;
+}
+
+/* Optional: Set minimum widths for important columns */
+.sr-table th:nth-child(1), .sr-table td:nth-child(1) { min-width: 40px; }   /* ID */
+.sr-table th:nth-child(2), .sr-table td:nth-child(2) { min-width: 180px; }  /* Title */
+.sr-table th:nth-child(3), .sr-table td:nth-child(3) { min-width: 80px; }   /* Link */
