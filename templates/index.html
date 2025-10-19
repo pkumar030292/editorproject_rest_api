@@ -6,7 +6,6 @@
   <meta name="description" content="The Portal – A multifunction web toolkit offering document generation, PDF to Word conversion, web scraping, YouTube downloading, and an online whiteboard." />
   <meta name="keywords" content="Document Generator, PDF Converter, Web Scraper, YouTube Downloader, Online Whiteboard, Tools Portal" />
   <meta name="author" content="The Portal Team" />
-  <meta name="google-adsense-account" content="ca-pub-8203307660710028">
   <title>The Portal – Smart Online Toolkit</title>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
@@ -151,6 +150,8 @@
       <div class="tab-btn" data-tab="scrapSection">Web Scraper</div>
       <div class="tab-btn" data-tab="youtubeSection">YouTube Downloader</div>
       <div class="tab-btn" data-tab="whiteboardSection">Whiteboard</div>
+        <div class="tab-btn" data-tab="sarkariSection">Sarkari Result</div>
+
     </div>
   <div id="home" class="content active homepage">
   <h1>Welcome to the AI-Powered Document Generator</h1>
@@ -390,9 +391,29 @@ document.getElementById("downloadFlipkartTableBtn").addEventListener("click", fu
       <canvas id="whiteboardCanvas"></canvas>
     </section>
 
+
+   <!-- Sarkari Result Section -->
+<div class="container" style="overflow-x:auto; width:100%;">
+    <h1>Sarkari Jobs (Latest Jobs)</h1>
+
+    <button id="scrapeBtn">Scrape New Results</button>
+    <button id="fetchBtn">Show All Saved Results</button>
+    <select id="filterTitle"></select>
+
+    <div id="results-container">
+        <div id="results" style="min-width:800px;"></div>
+    </div>
+</div>
+
+
+<!-- Styles -->
+
+
+      <!--    Sript for sarkari result-->
     <!-- Ads -->
     <div class="ad-container">Ad</div>
     <div class="ad-container">Ad</div>
+
 
   </main>
 
@@ -410,6 +431,7 @@ document.getElementById("downloadFlipkartTableBtn").addEventListener("click", fu
   <script src="{{ url_for('static', path='js/scrap.js') }}"></script>
   <script src="{{ url_for('static', path='js/whiteboard.js') }}"></script>
   <script src="{{ url_for('static', path='js/youtube.js') }}"></script>
+  <script src="{{ url_for('static', path='js/SRC.js') }}"></script>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
