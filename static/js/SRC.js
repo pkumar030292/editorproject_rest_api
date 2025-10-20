@@ -248,11 +248,17 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    // ---------- Auto refresh saved results every 5 seconds ----------
+       // ---------- Auto refresh saved results every 5 seconds ----------
     setInterval(fetchSavedResults, 5000);
 
+    // ---------- Initial fetch and scrape ----------
+    (async () => {
+        await scrapeNewResults();   // Run scraping immediately on load
+        await fetchSavedResults();  // Then load and show data
+    })();
+
     // ---------- Auto scrape new results every 15 minutes ----------
-    setInterval(scrapeNewResults, 15 * 60 * 1000);
+    setInterval(scrapeNewResults, 60 * 60 * 1000);
 
     // ---------- Initial fetch ----------
     fetchSavedResults();
